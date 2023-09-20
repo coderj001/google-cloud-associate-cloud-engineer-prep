@@ -43,10 +43,10 @@
 - Networking Services
     - [x]  Networking Refresher PART 1
     - [x]  Networking Refresher PART 2
-    - [ ]  Virtual Private Cloud
-    - [ ]  VPC Network Subnets
-    - [ ]  Routing and Private Google Access
-    - [ ]  IP Addressing
+    - [x]  Virtual Private Cloud
+    - [x]  VPC Network Subnets
+    - [x]  Routing and Private Google Access
+    - [x]  IP Addressing
     - [ ]  Creating Internal and External Static IP Addresses PART 1
     - [ ]  Creating Internal and External Static IP Addresses PART 2
     - [ ]  Firewall and Firewall Rules
@@ -413,3 +413,140 @@ Certainly! Here's a list of best practices for Cloud Identity and Access Managem
     - Layer 7 (Application Layer) encompasses various networking protocols for applications.
 
 ![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%209.png)
+
+## Virtual Private Cloud (VPC)
+
+A Virtual Private Cloud (VPC) on Google Cloud Platform (GCP) is a logically isolated section of the GCP network. It allows you to create your own private cloud environment within the GCP public cloud. VPCs provide you with control over your network traffic, including the ability to define your own IP address ranges, subnets, and routing tables. You can also use VPCs to create firewalls and other security measures to protect your resources.
+
+Here are some of the key benefits of using a VPC on GCP:
+
+- **Security:** VPCs provide a layer of security between your GCP resources and the public internet. This can help to protect your resources from unauthorized access and attack.
+- **Isolation:** VPCs allow you to isolate your GCP resources from other GCP customers. This can help to improve the performance and reliability of your resources.
+- **Predictability:** VPCs provide a predictable network environment for your GCP resources. This can help to reduce the risk of outages and performance problems.
+- **Flexibility:** VPCs are very flexible and can be customized to meet your specific needs. For example, you can create multiple subnets within your VPC, each with its own IP address range and routing table.
+
+![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2010.png)
+
+![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2011.png)
+
+### VPC Network Subnets
+
+## Routes
+
+![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2012.png)
+
+![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2013.png)
+
+![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2014.png)
+
+## IP Address
+
+![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2015.png)
+
+**Ephemeral IP address:** An ephemeral IP address is an IP address that is assigned to a resource for a limited period of time. Ephemeral IP addresses are typically used for resources that are not publicly accessible, such as internal compute engines or load balancers.
+
+**Internal IP address:** An internal IP address is an IP address that is used to communicate within a VPC network. Internal IP addresses are not accessible from the public internet.
+
+**External IP address:** An external IP address is an IP address that is used to communicate with the public internet. External IP addresses are typically assigned to resources that need to be accessible from the public internet, such as web servers or load balancers.
+
+**Alias IP address:** An alias IP address is an additional IP address that can be assigned to a resource. Alias IP addresses are typically used to provide multiple IP addresses for a single resource, such as a web server with multiple domains.
+
+**Real-life example:**
+
+A company has a VPC network with two compute engines: a web server and a database server. The web server needs to be accessible from the public internet, so it is assigned an external IP address. The database server does not need to be accessible from the public internet, so it is assigned an ephemeral IP address.
+
+The company also has a load balancer that is used to distribute traffic between the web server and the database server. The load balancer is assigned an alias IP address. This allows the company to use a single IP address for the load balancer, even though it is distributing traffic to two different compute engines.
+
+Another example:
+
+A company has a web server that is used to host multiple websites. The company wants to use a different IP address for each website. To do this, the company assigns an alias IP address to the web server for each website.
+
+Alias IP addresses can also be used to provide redundancy. For example, a company can assign two alias IP addresses to a web server. If one IP address becomes unavailable, the company can switch to the other IP address.
+
+Overall, ephemeral IP addresses, internal IP addresses, external IP addresses, and alias IP addresses are all important concepts in GCP networking. Understanding these concepts can help you to design and manage your GCP networks more effectively.
+
+![Screenshot_2023-09-20-18-42-17_1920x1080.png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Screenshot_2023-09-20-18-42-17_1920x1080.png)
+
+The diagram you provided appears to be using the Mermaid syntax, which is often used to create flowcharts and diagrams in text form. This particular diagram seems to be illustrating different types of IP addresses and concepts related to IP addressing within Google Cloud Platform (GCP). Let's break down each part of the diagram with explanations and real-life examples:
+
+**1. Internal (Private) IP Address (A):**
+
+- This represents an internal, private IP address. In GCP, this would typically be an IP address assigned to a resource that is used for communication within a Virtual Private Cloud (VPC) network.
+- Example: An internal IP address assigned to a virtual machine (VM) inside a GCP VPC. This IP address can be used for communication between VMs within the same VPC.
+
+**2. External (Public) IP Address (B):**
+
+- This represents an external, public IP address. In GCP, this is typically used for resources that need to be accessible from the internet.
+- Example: An external IP address assigned to a Load Balancer in GCP. This IP address allows users from the internet to access a web application running on a group of VMs behind the Load Balancer.
+
+**3. OPTIONAL (C):**
+
+- This node seems to represent options or configurations related to the external (public) IP address (B).
+- It branches out into several options: Alias IP, Auto, Custom, Ephemeral, and Static.
+
+**4. Alias IP (D):**
+
+- Alias IP is a concept used in GCP for assigning multiple IP addresses to a network interface of a VM.
+- Example: You might assign multiple Alias IP addresses to a VM in a VPC to enable it to serve different services on different IP addresses.
+
+**5. Auto (E):**
+
+- Auto might refer to automatic IP addressing, where GCP automatically assigns an IP address to a resource.
+- Example: When you create a VM in GCP, it can be configured to automatically receive an internal and/or external IP address.
+
+**6. Custom (F):**
+
+- Custom likely represents the ability to manually configure IP addresses according to your specific requirements.
+- Example: You might manually assign a specific IP address to a VM in GCP to ensure it always uses the same IP for consistent communication.
+
+**7. Ephemeral (G):**
+
+- Ephemeral IP addresses are temporary public IP addresses that are automatically assigned to resources but may change if the resource is stopped or restarted.
+- Example: When you start a GCP VM without specifying a static external IP, it is assigned an ephemeral IP address that may change if the VM is stopped and started again.
+
+**8. Static (H):**
+
+- Static IP addresses are permanent public IP addresses that you can reserve and assign to resources to ensure they always have the same IP, even after stopping and starting.
+- Example: You might reserve a static external IP address in GCP and assign it to a critical service to ensure that it always has the same public IP for external access.
+
+**9. PROMOTE TO STATIC (I):**
+
+- This option might represent the ability to convert an ephemeral IP address to a static IP address.
+- Example: If you initially use an ephemeral IP address for a service and later decide it needs a static IP, you can promote the ephemeral IP to a static IP in GCP.
+
+In summary, this diagram represents various IP addressing concepts within Google Cloud Platform, including internal and external IP addresses, options for configuring IP addresses, and the distinction between static and ephemeral IP addresses. These concepts are crucial for designing and managing network resources in GCP.
+
+**Scenario:** You are a Cloud Engineer tasked with setting up a highly available web application in GCP. The application consists of multiple virtual machines (VMs) behind a load balancer, and you need to configure the IP addresses for these VMs and the load balancer.
+
+**Step 1: Internal (Private) IP Addresses (A):**
+
+- First, you create a Virtual Private Cloud (VPC) network in GCP.
+- You assign internal (private) IP addresses to each of the VMs within the VPC. These IP addresses are used for communication between the VMs and are not accessible from the internet.
+- Example: VM1 has an internal IP address of 10.0.0.2, and VM2 has an internal IP address of 10.0.0.3.
+
+**Step 2: External (Public) IP Addresses (B):**
+
+- You set up a load balancer in GCP to distribute incoming internet traffic across your VMs.
+- The load balancer needs a public IP address (external IP) so that users can access your web application from the internet.
+- Example: The load balancer is assigned an external IP address of 203.0.113.1.
+
+**Step 3: Alias IP (D):**
+
+- To optimize your architecture, you decide to run multiple services on each VM, each requiring its own IP address.
+- You use the Alias IP feature to assign multiple IP addresses to each VM's network interface. This allows each service to have a dedicated IP.
+- Example: VM1 has an alias IP of 10.0.0.4, which is used for the web server, and an alias IP of 10.0.0.5, which is used for a database service.
+
+**Step 4: Static (H) and PROMOTE TO STATIC (I):**
+
+- You want the load balancer's external IP address to remain constant to ensure uninterrupted service even if the load balancer is stopped and started.
+- You reserve a static external IP address (203.0.113.1) and assign it to the load balancer. This ensures the IP address remains the same.
+- Later, you decide to promote an ephemeral external IP address assigned to one of the VMs to a static IP because it's hosting a critical component of your application that should always have the same IP address.
+- Example: The load balancer uses the reserved static external IP (203.0.113.1), and VM2's ephemeral IP (198.51.100.2) is promoted to a static IP (198.51.100.3) for consistency.
+
+**Step 5: Custom (F) and Ephemeral (G):**
+
+- For certain VMs in your environment, you may need to customize their IP addresses. For example, a specialized analytics VM requires a specific internal IP for data processing.
+- Other VMs, like development instances, can use ephemeral internal IPs because they don't need consistent IP addresses.
+- Example: The analytics VM is assigned a custom internal IP of 10.0.0.6, while development VMs use ephemeral IPs.
+
+In this scenario, you've applied various IP addressing concepts within GCP to create a resilient and scalable architecture for your web application. You've used internal and external IP addresses, configured alias IPs for service separation, reserved static IPs for critical components, and customized IPs as needed. This demonstrates how these IP concepts are interconnected and can be leveraged to design a robust cloud infrastructure in GCP

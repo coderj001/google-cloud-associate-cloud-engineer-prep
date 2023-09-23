@@ -47,11 +47,11 @@
     - [x]  VPC Network Subnets
     - [x]  Routing and Private Google Access
     - [x]  IP Addressing
-    - [ ]  Creating Internal and External Static IP Addresses PART 1
-    - [ ]  Creating Internal and External Static IP Addresses PART 2
-    - [ ]  Firewall and Firewall Rules
-    - [ ]  Custom VPC Part 1
-    - [ ]  Custom VPC Part 2
+    - [x]  Creating Internal and External Static IP Addresses PART 1
+    - [x]  Creating Internal and External Static IP Addresses PART 2
+    - [x]  Firewall and Firewall Rules
+    - [x]  Custom VPC Part 1
+    - [x]  Custom VPC Part 2
     - [ ]  VPC Network Peering
     - [ ]  VPC Network Peering
     - [ ]  Shared VPC
@@ -550,3 +550,74 @@ In summary, this diagram represents various IP addressing concepts within Google
 - Example: The analytics VM is assigned a custom internal IP of 10.0.0.6, while development VMs use ephemeral IPs.
 
 In this scenario, you've applied various IP addressing concepts within GCP to create a resilient and scalable architecture for your web application. You've used internal and external IP addresses, configured alias IPs for service separation, reserved static IPs for critical components, and customized IPs as needed. This demonstrates how these IP concepts are interconnected and can be leveraged to design a robust cloud infrastructure in GCP
+
+## Creating Internal and External Static IP Addresses
+
+**Key Points:**
+
+1. **Static IP Addresses:** The demo focuses on creating and managing both internal and external static IP addresses in Google Cloud Platform (GCP).
+2. **Project and Default VPC:** The demo assumes the use of a GCP project (in this case, "bowtieinc dev") with a default Virtual Private Cloud (VPC) created.
+3. **Creating a Static Internal IP Address:**
+    - Use the GCP Console.
+    - Navigate to Compute Engine.
+    - Create a new VM instance.
+    - Select "Reserve Static Internal IP Address" and provide the necessary details (e.g., name).
+    - The IP address persists even after the VM is deleted.
+4. **Viewing IP Addresses:**
+    - IP addresses can be viewed in the GCP Console under VPC networks or queried through the command line using `gcloud compute addresses list`.
+5. **Promoting an Ephemeral Internal IP Address:**
+    - Convert an ephemeral internal IP address to a static one by editing the network interface of a VM instance.
+6. **Creating a Static External IP Address:**
+    - Use the GCP Console under VPC networks to create a static external IP address.
+    - Assign it to a VM instance during creation.
+7. **Promoting an Ephemeral External IP Address:**
+    - Promote an ephemeral external IP address to a static one using the `gcloud compute addresses create` command.
+8. **Cleanup:** It's essential to delete instances and IP addresses that are no longer needed to avoid unnecessary charges.
+
+**Real-Life Example Scenario for the Demo:**
+
+Imagine you're a cloud infrastructure administrator responsible for managing a set of virtual machines (VMs) and IP addresses in a GCP project for a web application. Here's how the key points apply to this scenario:
+
+1. **Static IP Addresses:** You need static IP addresses to ensure consistent access to your VMs and services.
+2. **Project and Default VPC:** Your GCP project is named "WebAppProj," and you've set up a default VPC for networking.
+3. **Creating a Static Internal IP Address:** You create a static internal IP address named "webapp-internal-ip" to ensure that a critical backend service always has the same IP address, even if you delete and recreate VM instances.
+4. **Viewing IP Addresses:** You regularly check IP addresses through the GCP Console and use `gcloud compute addresses list` to verify IP address assignments.
+5. **Promoting an Ephemeral Internal IP Address:** You realize that one of your VM instances, "webapp-backend," needs a static IP address. You promote its ephemeral internal IP to a static one to ensure stability.
+6. **Creating a Static External IP Address:** You create a static external IP address named "webapp-external-ip" to associate it with a load balancer for your web application. This ensures that your application always has a consistent external IP for traffic.
+7. **Promoting an Ephemeral External IP Address:** A new instance, "webapp-api-server," initially has an ephemeral external IP address. You promote it to a static external IP address to ensure reliability for external API consumers.
+8. **Cleanup:** After a project phase is complete, you diligently clean up unused resources, such as deleting instances and releasing IP addresses that are no longer needed.
+
+In this scenario, the ability to manage static IP addresses effectively is crucial for maintaining the stability and reliability of your web application on GCP.
+
+## VPC Firewall Rules
+
+![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2016.png)
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1553x874 - 7h46m11s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1553x874_-_7h46m11s.png)
+
+1. **Network:** This refers to the Virtual Private Cloud (VPC) network to which the firewall rule is applied. It specifies the network context in which the rule operates.
+2. **Priority:** Priority is a numerical value that determines the order in which rules are applied. Lower numbers indicate higher priority, meaning rules with lower numbers take precedence.
+3. **Direction of Traffic:** This component specifies whether the rule is for incoming connections (ingress) or outgoing connections (egress). Ingress rules control incoming traffic, while egress rules control outgoing traffic.
+4. **Action on Match:** This determines the action taken when the rule matches traffic. It can be set to "allow" to permit the connection or "deny" to block it.
+5. **Target:** The target specifies which instances the rule applies to. It can target all instances in the network, instances with specific network tags, or instances with specific service accounts.
+6. **Source Filter:** This is applicable to ingress rules and specifies the source of incoming traffic. It can be based on source IP ranges, source network tags, or source service accounts.
+7. **Protocols and Ports:** This component allows you to specify the protocols (e.g., TCP, UDP) and port numbers associated with the traffic that the rule applies to. Omitting both protocols and ports makes the rule applicable to all traffic.
+8. **Enforcement Status:** You can enable or disable the enforcement of the firewall rule using this setting. Disabling a rule temporarily stops it from taking effect, which can be useful for troubleshooting or granting temporary access.
+
+## Custom VPC
+
+What we will be building,
+
+The diagram you sent shows a simple Google Cloud Platform (GCP) network architecture. The network consists of a VPC network with a public subnet and a private subnet. The public subnet is accessible from the public internet, while the private subnet is not.
+
+The VPC network also has a Cloud Load Balancing (CLB) instance, which is used to distribute traffic to the web servers in the private subnet. The CLB instance has a public IP address, which is used by clients to access the web servers.
+
+The web servers in the private subnet are protected by a firewall, which only allows traffic from the CLB instance to reach them.
+
+The diagram also shows a bastion host, which is a server in the public subnet that is used to access the servers in the private subnet. The bastion host is protected by a firewall, which only allows traffic from trusted IP addresses to reach it.
+
+This network architecture is secure because it isolates the web servers in the private subnet from the public internet. The only way to access the web servers is through the CLB instance, which is protected by a firewall. The bastion host can be used to access the servers in the private subnet, but it is also protected by a firewall.
+
+Overall, this network architecture is a good example of how to use GCP to create a secure and scalable network.
+
+![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2017.png)

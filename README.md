@@ -52,9 +52,9 @@
     - [x]  Firewall and Firewall Rules
     - [x]  Custom VPC Part 1
     - [x]  Custom VPC Part 2
-    - [ ]  VPC Network Peering
-    - [ ]  VPC Network Peering
-    - [ ]  Shared VPC
+    - [x]  VPC Network Peering
+    - [x]  VPC Network Peering
+    - [x]  Shared VPC
     - [ ]  VPC Flow Logs
     - [ ]  DNS Fundamentals
     - [ ]  DNS Record Types
@@ -608,7 +608,7 @@ In this scenario, the ability to manage static IP addresses effectively is cruci
 
 What we will be building,
 
-The diagram you sent shows a simple Google Cloud Platform (GCP) network architecture. The network consists of a VPC network with a public subnet and a private subnet. The public subnet is accessible from the public internet, while the private subnet is not.
+The image you sent shows a diagram of a simple GCP network architecture. The network consists of a VPC network with a public subnet and a private subnet. The public subnet is accessible from the public internet, while the private subnet is not.
 
 The VPC network also has a Cloud Load Balancing (CLB) instance, which is used to distribute traffic to the web servers in the private subnet. The CLB instance has a public IP address, which is used by clients to access the web servers.
 
@@ -618,6 +618,247 @@ The diagram also shows a bastion host, which is a server in the public subnet th
 
 This network architecture is secure because it isolates the web servers in the private subnet from the public internet. The only way to access the web servers is through the CLB instance, which is protected by a firewall. The bastion host can be used to access the servers in the private subnet, but it is also protected by a firewall.
 
-Overall, this network architecture is a good example of how to use GCP to create a secure and scalable network.
+**Here is a more detailed explanation of each component in the diagram:**
+
+- **VPC network:** A VPC network is a virtual private network that is isolated from the public internet. VPC networks allow you to create a private network for your resources, such as virtual machines, load balancers, and databases. This gives you more control over your network environment and helps to protect your data from unauthorized access.
+- **Public subnet:** A public subnet is a subnet in a VPC network that is accessible from the public internet. Public subnets are typically used for resources that need to be accessible from the public internet, such as web servers and load balancers.
+- **Private subnet:** A private subnet is a subnet in a VPC network that is not accessible from the public internet. Private subnets are typically used for resources that do not need to be accessible from the public internet, such as databases and application servers.
+- **Cloud Load Balancing (CLB) instance:** A CLB instance is a load balancer that distributes traffic across multiple servers. CLB instances are typically used to improve the performance and reliability of applications.
+- **Firewall:** A firewall is a security device that filters traffic between two networks. Firewalls can be used to block unauthorized traffic and protect your resources from attack.
+- **Bastion host:** A bastion host is a server in the public subnet that is used to access resources in a private network from the public internet. Bastion hosts are typically protected by a firewall, which only allows traffic from trusted IP addresses to reach them.
+
+**Here are some of the benefits of using this network architecture:**
+
+- **Security:** This network architecture is secure because it isolates the web servers in the private subnet from the public internet. The only way to access the web servers is through the CLB instance, which is protected by a firewall.
+- **Performance:** This network architecture can improve the performance of your applications by using a CLB instance to distribute traffic across multiple web servers.
+- **Control:** This network architecture gives you more control over your network environment. You can use firewalls to control which traffic is allowed to flow between the different subnets.
+- **Cost:** This network architecture can help you to reduce your cloud costs by optimizing your network resources. For example, you can use private subnets for resources that do not need to be accessible from the public internet.
 
 ![Untitled](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/Untitled%2017.png)
+
+**Create Custom VPC and Subnets:**
+
+1. **Create Custom VPC Network:**
+    
+    ```bash
+    gcloud compute networks create [NETWORK_NAME] --subnet-mode custom
+    
+    ```
+    
+2. **Create Public Subnet:**
+    
+    ```bash
+    gcloud compute networks subnets create [PUBLIC_SUBNET_NAME] --network [NETWORK_NAME] --range [PUBLIC_IP_RANGE]
+    
+    ```
+    
+3. **Create Private Subnet:**
+    
+    ```bash
+    gcloud compute networks subnets create [PRIVATE_SUBNET_NAME] --network [NETWORK_NAME] --range [PRIVATE_IP_RANGE]
+    
+    ```
+    
+
+### **Create and Configure Firewall Rules:**
+
+1. **Create Firewall Rule for Public Access:**
+    
+    ```bash
+    gcloud compute firewall-rules create public-access --network [NETWORK_NAME] --action allow --direction ingress --rules tcp:22,icmp --source-ranges 0.0.0.0/0 --target-tags public
+    
+    ```
+    
+2. **Create Firewall Rule for Private Access:**
+    
+    ```bash
+    gcloud compute firewall-rules create private-access --network [NETWORK_NAME] --action allow --direction ingress --rules tcp:22,icmp --source-ranges [PRIVATE_IP_RANGE] --target-tags private
+    
+    ```
+    
+
+### **Test the Configuration:**
+
+1. **SSH into Public Instance:**
+    
+    ```bash
+    gcloud compute ssh [PUBLIC_INSTANCE_NAME]
+    
+    ```
+    
+2. **Check Access to Cloud Storage:**
+    
+    ```bash
+    gsutil ls -p [PROJECT_NAME] -b gs://[BUCKET_NAME]
+    
+    ```
+    
+3. **Ping Private Instance from Public Instance:**
+    
+    ```bash
+    ping [PRIVATE_INSTANCE_IP]
+    
+    ```
+    
+4. **SSH into Private Instance from Public Instance:**
+    
+    ```bash
+    gcloud compute ssh [PRIVATE_INSTANCE_NAME] --internal-ip
+    
+    ```
+    
+5. **Enable Private Google Access on Private Subnet:**
+- Go to GCP Console > VPC Network > Select Private Subnet > Edit > Enable "Private Google Access"
+1. **Re-check Access to Cloud Storage on Private Instance:**
+
+```bash
+gsutil ls -p [PROJECT_NAME] -b gs://[BUCKET_NAME]
+
+```
+
+### **Cleanup:**
+
+1. **Delete All Resources:**
+    - Delete the VPC, subnets, instances, and firewall rules to clean up the environment.
+
+## VPC Peering
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h14m03s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h14m03s.png)
+
+### **VPC Peering Overview:**
+
+- VPC peering enables private communication between workloads in different VPC networks.
+- Traffic stays within Google's network and does not traverse the public internet.
+- Peering can occur between VPCs in the same or different projects and even across different organizations.
+- Benefits of VPC peering include reduced network latency, improved network security, and cost savings on egress traffic.
+
+### **Characteristics of Peered VPCs:**
+
+- Peered VPCs remain administratively separate, with independent routing, firewalls, and other traffic management.
+- Each side of a peering association is set up independently.
+- Peering becomes active only when the configuration from both sides matches.
+- Each VPC can delete the peering association independently.
+
+### **Routing and Routes:**
+
+- VPC peers exchange all subnet routes.
+- Custom routes, subnet routes, and static routes can be exchanged.
+- A VPC network can peer with multiple VPC networks (with limits).
+- Subnet CIDR ranges in peered VPCs cannot overlap with static routes in other peered networks.
+- Overlapping subnet IP ranges across VPC networks with a common peer network are not allowed.
+
+### **Routing Controls:**
+
+- VPC peering does not provide granular route controls; route filtering is handled by firewall rules.
+- Ingress traffic to VM instances in a peer network requires creating ingress allow firewall rules.
+
+### **Transitive Peering:**
+
+- Transitive peering is not supported; only directly peered networks can communicate.
+- To communicate from Network A to Network C, Network A must be directly peered with Network C.
+
+### **Tags and Service Accounts:**
+
+- Tags or service accounts from one peered network cannot be used in the other; each network operates independently.
+
+### **Internal DNS:**
+
+- Internal DNS is not accessible for Compute Engine instances in peered networks; IP addresses must be used for communication.
+
+### DEMO
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h20m26s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h20m26s.png)
+
+**Demo Process: Creating VPC Peering Connection**
+
+1. **Network Setup**
+    - Create two separate VPC networks in different projects:
+        - Project Tony: `bowtie_inc-a`
+        - Project Bowtie Inc: `bowtie_inc-b`
+    - Define subnets within each network with non-overlapping IP ranges.
+2. **Firewall Rules**
+    - In each project, create firewall rules to allow traffic between instances:
+        - Project Tony: `project-tony-a`
+        - Project Bowtie Inc: `bowtie-inc-b`
+3. **Instance Creation**
+    - Create instances in both networks:
+        - Project Tony: `instance-a`
+        - Project Bowtie Inc: `instance-b`
+    - Set the network interface of each instance to the corresponding VPC network.
+4. **VPC Peering Configuration**
+    - Go to Project Tony:
+        - Navigate to VPC Network > VPC Network Peering.
+        - Click "Create Connection."
+        - Fill in the peering connection details:
+            - Name: `peering-a-b`
+            - VPC Network: `bowtie_inc-a`
+            - Peered VPC Network: `bowtie_inc-b`
+        - Leave other options as default and create the connection.
+    - Go to Project Bowtie Inc:
+        - Create a peering connection following the same steps:
+            - Name: `peering-b-a`
+            - VPC Network: `bowtie_inc-b`
+            - Peered VPC Network: `bowtie_inc-a`
+5. **Verification**
+    - Obtain the internal IP of one instance in either network.
+    - SSH into an instance in the other network and perform a ping test using the internal IP of the first instance.
+        - Example: `ping <internal_IP>`
+    - Ensure successful communication between the instances, confirming that the VPC peering connection is working.
+6. **Resource Cleanup**
+    - Delete instances, firewall rules, and VPC networks in both projects to clean up resources.
+
+## Shared VPC
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h40m40s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h40m40s.png)
+
+### Shared VPC Concepts and Terminology:
+
+- Shared VPCs allow resources from multiple projects to connect to a common VPC network.
+- A host project designates the VPC networks to be shared, and service projects are attached to the host project.
+- A project can be either a host project or a service project, not both simultaneously.
+- Shared VPC admin roles have permissions to enable host projects, attach service projects, and delegate access.
+- Service project admins can have project-level or subnet-level permissions within the shared VPC.
+
+### Use Case: Simple Shared VPC Scenario:
+
+- Service projects are attached to a host project.
+- Service project admins configure access to specific subnets within the shared VPC.
+- Instances in service projects can communicate using internal IPs.
+
+### Use Case: Multiple Host Projects:
+
+- An organization can have multiple host projects, each with its service projects.
+- Subnets in different host projects can use the same IP ranges.
+- Resource management remains separate within each host project.
+    
+    ![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h41m16s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h41m16s.png)
+    
+
+### Use Case: Hybrid Environment:
+
+- A single host project is connected via Cloud VPN to an on-premises network.
+- Some services are in GCP, and others remain on premises.
+- Service project admins are granted permissions for communication and billing.
+    
+    ![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h41m26s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h41m26s.png)
+    
+
+### Use Case: Two-Tier Web Service:
+
+- Two tiers of a web service are managed by different teams.
+- Shared VPC allows both tiers to use a common VPC network.
+- Resources are shared while enabling separate management for each tier.
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h42m28s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h42m28s.png)
+
+## VPC Flow Logs
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h47m24s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h47m24s.png)
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h48m31s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h48m31s.png)
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h49m05s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h49m05s.png)
+
+![freeCodeCamp.org - Google Cloud Associate Cloud Engineer Course - Pass the Exam! [jpno8FSqpc8 - 1546x870 - 8h49m57s].png](Google%20Cloud%20Platform%20-%20Associate%20Exam%20Prep%20f562c31336a343c1a19bef917fea9ad8/freeCodeCamp.org_-_Google_Cloud_Associate_Cloud_Engineer_Course_-_Pass_the_Exam!_jpno8FSqpc8_-_1546x870_-_8h49m57s.png)
+
+## DNS Fundamental
